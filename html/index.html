@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A stock dashboard with a chart section, stock list, and detailed information about selected stocks."
+    />
+    <meta
+      name="keywords"
+      content="Stock, Dashboard, Chart, Financial Data, API"
+    />
+    <meta name="author" content="Nikhil Mahajan" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" type="image/x-icon" href="../media/logo.jpg" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <title>Stock Dashboard</title>
+  </head>
+  <body>
+    <header><h1>Stock Market Analysis</h1></header>
+    <div id="main-container">
+      <!-- Chart Section -->
+      <section id="chart-section">
+        <h1>Stock Performance Chart</h1>
+        <div id="chart-container">
+          <!-- Chart will be rendered here dynamically -->
+          <canvas id="stock-chart"></canvas>
+        </div>
+        <div id="chart-controls">
+          <p>Select Time Range:</p>
+          <button id="btn-1month" class="range-button" data-range="1m">
+            1 Month
+          </button>
+          <button id="btn-3month" class="range-button" data-range="3m">
+            3 Months
+          </button>
+          <button id="btn-1year" class="range-button" data-range="1y">
+            1 Year
+          </button>
+          <button id="btn-5year" class="range-button" data-range="5y">
+            5 Years
+          </button>
+        </div>
+        <div id="chart-peak-low">
+          <p><strong>Peak Value:</strong> <span id="peak-value"></span></p>
+          <p><strong>Low Value:</strong> <span id="low-value"></span></p>
+        </div>
+      </section>
+
+      <!-- List Section -->
+      <section id="list-section">
+        <h2>Available Stocks</h2>
+        <ul id="stock-list">
+          <!-- Stock items dynamically populated here -->
+          <!-- Example structure of list item -->
+          <!--
+                <li class="stock-item" data-stock-id="AAPL">
+                    <span class="stock-name">Apple Inc.</span>
+                    <span class="stock-book-value">Book Value: $12.34</span>
+                    <span class="stock-profit">Profit: <span class="profit-value" style="color: green;">$5.67</span></span>
+                </li>
+                -->
+        </ul>
+      </section>
+
+      <!-- Detail Section -->
+      <section id="details-section">
+        <h2>Stock Details</h2>
+        <div id="stock-details">
+          <p>
+            <strong>Stock Name:</strong> <span id="detail-stock-name">--</span>
+          </p>
+          <p>
+            <strong>Book Value:</strong> <span id="detail-book-value">--</span>
+          </p>
+          <p>
+            <strong>Profit:</strong>
+            <span id="detail-profit-value" class="profit-text">--</span>
+          </p>
+          <p><strong>Summary:</strong></p>
+          <p id="detail-summary">--</p>
+        </div>
+      </section>
+    </div>
+
+    <script src="../js/main.js" type="module"></script>
+    <script src="../js/RenderChart.js" type="module"></script>
+
+    <!-- Script references for third-party charting library (example: Chart.js) -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+  </body>
+</html>

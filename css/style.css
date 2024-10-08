@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap");
+/* font-family: "Alegreya", serif; */
+:root {
+  --primary-bg-color: #1a1a1a;
+  --secondary-bg-color: #2b2b2b;
+  --shadow: inset 2px 1px 0.4px rgba(170, 170, 170, 0.5),
+    inset -2px -1px 0.2px rgba(161, 161, 161, 0.7);
+  --right-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+  --inset-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.1),
+    inset -3px -3px 8px rgba(208, 206, 206, 0.7);
+  --text-color: white;
+  --light: wheat;
+}
+body {
+  background-color: var(--primary-bg-color);
+  color: var(--text-color);
+  font-family: "Alegreya", serif;
+}
+header h1 {
+  font-size: 3rem;
+  text-align: center;
+  letter-spacing: 0.1rem;
+}
+#main-container {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  width: 100%;
+}
+#chart-container {
+  width: 90%;
+  background-color: var(--secondary-bg-color);
+}
+#chart-section {
+  flex-basis: 65%;
+  background-color: var(--secondary-bg-color);
+  color: white;
+}
+#chart-section h1,
+#list-section h2 {
+  text-align: center;
+  background-color: var(--light);
+  width: fit-content;
+  margin: auto;
+  border-radius: 0.4rem;
+  padding: 1rem;
+
+  margin-top: 10px;
+  box-shadow: var(--shadow);
+  margin-bottom: 3rem;
+  color: black;
+}
+#chart-container {
+  margin: 0 auto;
+  background-color: wheat;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+#chart-controls p {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bolder;
+}
+#chart-controls button {
+  padding: 1rem;
+  cursor: pointer;
+  margin: 0 auto;
+  width: 22%;
+  transition: all 0.4s;
+  border-radius: 1rem;
+  margin-left: 0.8rem;
+  font-size: 1.4rem;
+}
+#chart-controls button:hover {
+  transform: scale(1.03);
+}
+#stock-chart {
+  margin: auto;
+  color: white;
+}
+#list-section {
+  flex-basis: 32%;
+  background-color: var(--secondary-bg-color);
+  text-align: center;
+}
+
+#details-section {
+  background-color: var(--secondary-bg-color);
+  flex-grow: 1;
+}
+
+@media screen and (max-width: 743px) {
+  #chart-section {
+    margin: auto;
+    flex-basis: 100%;
+  }
+}
