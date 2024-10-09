@@ -38,6 +38,7 @@ header h1 {
   flex-basis: 65%;
   background-color: var(--secondary-bg-color);
   color: white;
+  flex-grow: 1;
 }
 #chart-section h1,
 #list-section h2 {
@@ -81,6 +82,31 @@ header h1 {
   margin: auto;
   color: white;
 }
+#stock-list {
+  list-style-type: none;
+  display: table;
+}
+.stock-item {
+  display: table-row;
+}
+.stock-item span {
+  display: table-cell;
+  font-size: 2rem;
+  padding: 1rem;
+}
+.stock-item .stock-name {
+  background-color: wheat;
+  color: black;
+  font-weight: bolder;
+  box-shadow: var(--right-shadow);
+  cursor: pointer;
+  border-radius: 0.3rem;
+  transition: all 0.4s;
+}
+.stock-item .stock-name:hover {
+  transform: scale(1.1);
+}
+
 #list-section {
   flex-basis: 32%;
   background-color: var(--secondary-bg-color);
