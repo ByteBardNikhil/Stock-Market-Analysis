@@ -1,11 +1,16 @@
 import { renderChart } from "../js/RenderChart.js";
+
 export const chartDataURL = `https://stocksapi-uhe1.onrender.com/api/stocks/getstocksdata`;
 export const summaryDataURL = `https://stocksapi-uhe1.onrender.com/api/stocks/getstocksprofiledata`;
 export const bookNprofit = `https://stocksapi-uhe1.onrender.com/api/stocks/getstockstatsdata`;
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
-let stock_ID = "AAPL",
-  Main_range = "1mo";
+export let stock_ID = "AAPL",
+  Main_range = "1mo",
+  Fullstocks = "",
+  BV,
+  P;
+
 renderChart(Main_range, stock_ID);
 
 async function fetchData() {
@@ -14,14 +19,20 @@ async function fetchData() {
     const data = await response.json();
     console.log(data.stocksStatsData);
 
-    for (const stocks of data.stocksStatsData) {
-      for (let stock in stocks) {
-        const { bookValue, profit } = stocks[stock];
+    const stocks = data.stocksStatsData[0];
+    Fullstocks = stocks;
+    BV = Fullstocks[stock_ID].bookValue;
+    P = Fullstocks[stock_ID].profit;
+    setBnP(BV, P);
 
-        if (bookValue && profit) {
-          await delay(300);
-          print(stock, bookValue, profit);
-        }
+    console.log(stocks);
+
+    for (let stock in stocks) {
+      const { bookValue, profit } = stocks[stock];
+
+      if (bookValue && profit) {
+        await delay(300);
+        print(stock, bookValue, profit);
       }
     }
   } catch (error) {
@@ -46,6 +57,11 @@ function print(stock, bookValue, profit) {
 function handleStockClick(stockId) {
   console.log(stockId);
   stock_ID = stockId;
+  BV = Fullstocks[stock_ID].bookValue;
+  P = Fullstocks[stock_ID].profit;
+  setBnP(BV, P);
+  setSummaryDetails(stock_ID);
+
   let range = "1mo";
 
   renderChart(range, stockId);
@@ -64,3 +80,25 @@ buttons.forEach((button) => {
     renderChart(Main_range, stock_ID);
   });
 });
+
+function setBnP(BV, P) {
+  const bookvalue = document.getElementById("detail-book-value");
+  const profit = document.getElementById("detail-profit-value");
+  bookvalue.textContent = BV;
+  profit.textContent = P;
+}
+
+// set summary details
+const summaryData = await fetch(summaryDataURL).then((res) => res.json());
+
+const stocks = summaryData.stocksProfileData[0];
+console.log(stocks[stock_ID]);
+
+export function setSummaryDetails(stock_id) {
+  const stockName = document.getElementById("detail-stock-name");
+
+  const summary = document.getElementById("detail-summary");
+  stockName.textContent = stock_id;
+  summary.textContent = stocks[stock_ID].summary;
+}
+setSummaryDetails(stock_ID);

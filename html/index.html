@@ -27,8 +27,8 @@
           <!-- Chart will be rendered here dynamically -->
           <canvas id="stock-chart"></canvas>
         </div>
+        <p>Select Time Range:</p>
         <div id="chart-controls">
-          <p>Select Time Range:</p>
           <button id="btn-1month" class="range-button" data-range="1mo">
             1 Month
           </button>
@@ -69,16 +69,18 @@
         <h2>Stock Details</h2>
         <div id="stock-details">
           <p>
-            <strong>Stock Name:</strong> <span id="detail-stock-name">--</span>
+            <strong>Stock Name: &nbsp;</strong>
+            <span id="detail-stock-name">--</span>
           </p>
           <p>
-            <strong>Book Value:</strong> <span id="detail-book-value">--</span>
+            <strong>Book Value:&nbsp;</strong>
+            <span id="detail-book-value">--</span>
           </p>
           <p>
-            <strong>Profit:</strong>
+            <strong>Profit:&nbsp;</strong>
             <span id="detail-profit-value" class="profit-text">--</span>
           </p>
-          <p><strong>Summary:</strong></p>
+          <p><strong>Summary :-</strong></p>
           <p id="detail-summary">--</p>
         </div>
       </section>
@@ -86,6 +88,7 @@
 
     <script src="../js/main.js" type="module"></script>
     <script src="../js/RenderChart.js" type="module"></script>
+    <script src="../js/StockDetail.js" type="module"></script>
 
     <!-- Script references for third-party charting library (example: Chart.js) -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->

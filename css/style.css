@@ -41,7 +41,8 @@ header h1 {
   flex-grow: 1;
 }
 #chart-section h1,
-#list-section h2 {
+#list-section h2,
+#details-section h2 {
   text-align: center;
   background-color: var(--light);
   width: fit-content;
@@ -60,19 +61,23 @@ header h1 {
   padding: 1rem;
   border-radius: 0.5rem;
 }
-#chart-controls p {
+#chart-section p {
   text-align: center;
   font-size: 1.4rem;
   font-weight: bolder;
 }
+#chart-controls {
+  display: flex;
+}
+
 #chart-controls button {
   padding: 1rem;
   cursor: pointer;
   margin: 0 auto;
-  width: 22%;
+  width: 20%;
   transition: all 0.4s;
   border-radius: 1rem;
-  margin-left: 0.8rem;
+
   font-size: 1.4rem;
 }
 #chart-controls button:hover {
@@ -113,13 +118,27 @@ header h1 {
   text-align: center;
 }
 
+
 #details-section {
   background-color: var(--secondary-bg-color);
   flex-grow: 1;
 }
-
+#stock-details {
+  font-size: 1.5rem;
+}
 @media screen and (max-width: 743px) {
   #chart-section {
+    margin: auto;
+    flex-basis: 100%;
+  }
+  #chart-controls {
+    flex-wrap: wrap;
+  }
+  #chart-controls button {
+    width: 10%;
+    font-size: 0.8rem;
+  }
+  #list-section {
     margin: auto;
     flex-basis: 100%;
   }
