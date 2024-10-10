@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="icon" type="image/x-icon" href="../media/logo.jpg" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     <title>Stock Dashboard</title>
   </head>
   <body>
@@ -25,20 +26,24 @@
         <h1>Stock Performance Chart</h1>
         <div id="chart-container">
           <!-- Chart will be rendered here dynamically -->
-          <canvas id="stock-chart"></canvas>
+          <!-- <canvas id="stock-chart"></canvas> -->
+          <!-- <canvas id="stock-chart" width="800" height="400"></canvas> -->
+          <canvas id="chartCanvas" width="800" height="400"></canvas>
+          <div class="chart-tooltip" id="tooltip"></div>
+          <div class="x-axis-label" id="xAxisLabel"></div>
         </div>
         <p>Select Time Range:</p>
         <div id="chart-controls">
-          <button id="btn-1month" class="range-button" data-range="1mo">
+          <button id="btn1d" class="range-button" data-range="1mo">
             1 Month
           </button>
-          <button id="btn-3month" class="range-button" data-range="3mo">
+          <button id="btn1mo" class="range-button" data-range="3mo">
             3 Months
           </button>
-          <button id="btn-1year" class="range-button" data-range="1y">
+          <button id="btn1y" class="range-button" data-range="1y">
             1 Year
           </button>
-          <button id="btn-5year" class="range-button" data-range="5y">
+          <button id="btn5y" class="range-button" data-range="5y">
             5 Years
           </button>
         </div>
@@ -88,7 +93,6 @@
 
     <script src="../js/main.js" type="module"></script>
     <script src="../js/RenderChart.js" type="module"></script>
-    <script src="../js/StockDetail.js" type="module"></script>
 
     <!-- Script references for third-party charting library (example: Chart.js) -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->

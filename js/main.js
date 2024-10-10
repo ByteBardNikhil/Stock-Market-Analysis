@@ -1,4 +1,4 @@
-import { renderChart } from "../js/RenderChart.js";
+import fetchAndCreateChart from "../js/RenderChart.js";
 
 export const chartDataURL = `https://stocksapi-uhe1.onrender.com/api/stocks/getstocksdata`;
 export const summaryDataURL = `https://stocksapi-uhe1.onrender.com/api/stocks/getstocksprofiledata`;
@@ -11,7 +11,7 @@ export let stock_ID = "AAPL",
   BV,
   P;
 
-renderChart(Main_range, stock_ID);
+fetchAndCreateChart(Main_range, stock_ID);
 
 async function fetchData() {
   try {
@@ -42,12 +42,15 @@ async function fetchData() {
 
 function print(stock, bookValue, profit) {
   const ul = document.getElementById("stock-list");
+  const profitColor = profit > 0 ? "green" : "red"; // Set color based on profit
 
   const ele = `
     <li class="stock-item" data-stock-id="${stock}">
       <span class="stock-name" onclick="handleStockClick('${stock}')">${stock}</span>
       <span class="stock-book-value">$${bookValue.toFixed(2)}</span>
-      <span class="stock-profit">$${profit.toFixed(2)}</span>
+      <span class="stock-profit" style="color:${profitColor}">$${profit.toFixed(
+    2
+  )}</span>
     </li>
   `;
 
@@ -64,7 +67,7 @@ function handleStockClick(stockId) {
 
   let range = "1mo";
 
-  renderChart(range, stockId);
+  fetchAndCreateChart(range, stockId);
 }
 
 fetchData();
@@ -77,7 +80,7 @@ buttons.forEach((button) => {
     Main_range = button.getAttribute("data-range");
     console.log("Button clicked with ", Main_range, stock_ID);
 
-    renderChart(Main_range, stock_ID);
+    fetchAndCreateChart(Main_range, stock_ID);
   });
 });
 
@@ -102,3 +105,39 @@ export function setSummaryDetails(stock_id) {
   summary.textContent = stocks[stock_ID].summary;
 }
 setSummaryDetails(stock_ID);
+
+export async function getStocks(symbol) {
+  const url = `https://stocksapi-uhe1.onrender.com/api/stocks/getstocksprofiledata`;
+  try {
+    const response = await fetch(url);
+    const result = await response.json();
+    console.log();
+    const stocksummary = document.querySelector("#detail-summary");
+    stocksummary.textContent = result.stocksProfileData[0][symbol].summary;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getStats(symbol) {
+  const url = `https://stocksapi-uhe1.onrender.com/api/stocks/getstockstatsdata`;
+
+  try {
+    const response = await fetch(url);
+    const result = await response.json();
+    const bookValue = result.stocksStatsData[0][symbol].bookValue;
+    const profit = result.stocksStatsData[0][symbol].profit;
+    const stocksummary = document.querySelector("#detail-summary");
+    document.querySelector("#detail-stock-name").textContent = symbol;
+    const Profit = document.getElementById("detail-profit-value");
+    Profit.textContent = `${profit}%`;
+    if (profit > 0) {
+      Profit.setAttribute("style", "color: green");
+    } else {
+      Profit.setAttribute("style", "color: red");
+    }
+    document.getElementById("detail-book-value").textContent = `$${bookValue}`;
+  } catch (error) {
+    console.error(error);
+  }
+}

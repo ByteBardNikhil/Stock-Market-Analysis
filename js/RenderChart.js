@@ -1,96 +1,157 @@
-import { chartDataURL } from "../js/main.js";
+// Export and import statements
+export let st = "AAPL";
+import { getStocks, getStats, chartDataURL } from "../js/main.js";
 
-async function getStockData(stockSymbol) {
+export default async function fetchAndCreateChart(
+  range = "5y",
+  symbol = "AMRN"
+) {
+  st = symbol;
   try {
-    const response = await fetch(chartDataURL);
-    const data = await response.json();
+    const result = await fetch(chartDataURL).then((res) => res.json());
 
-    const stocks = data.stocksData[0];
-    return stocks[stockSymbol];
+    let chartData = result.stocksData[0][st][range].value;
+    let labels = result.stocksData[0][st][range].timeStamp;
+
+    labels = labels.map((timestamp) =>
+      new Date(timestamp * 1000).toLocaleDateString()
+    );
+
+    drawChart(chartData, labels, st);
+    getStocks(st);
+    getStats(st);
   } catch (error) {
-    console.error("Error fetching stock data:", error);
-    return null;
+    console.error(error);
   }
 }
 
-export async function renderChart(range, stockSymbol) {
-  const stockData = await getStockData(stockSymbol); // Await stock data
+// Button event listeners
+const onedaybtn = document.getElementById("btn1d");
+const onemonbtn = document.getElementById("btn1mo");
+const oneyrbtn = document.getElementById("btn1y");
+const fiveyrbtn = document.getElementById("btn5y");
 
-  if (!stockData || !stockData[range]) {
-    console.error(
-      `No data available for ${stockSymbol} in the selected range: ${range}`
-    );
-    return;
-  }
+onedaybtn.addEventListener("click", () => {
+  fetchAndCreateChart("1mo", st);
+});
+onemonbtn.addEventListener("click", () => {
+  fetchAndCreateChart("3mo", st);
+});
+oneyrbtn.addEventListener("click", () => {
+  fetchAndCreateChart("1y", st);
+});
+fiveyrbtn.addEventListener("click", () => {
+  fetchAndCreateChart("5y", st);
+});
 
-  const labels = stockData[range].timeStamp.map((ts) =>
-    new Date(ts * 1000).toLocaleDateString()
-  );
-  const dataValues = stockData[range].value;
-
-  const peakValue = Math.max(...dataValues);
-  const lowValue = Math.min(...dataValues);
+// Function to draw the chart on the canvas
+function drawChart(data, labels, stockName) {
+  const peakValue = Math.max(...data);
+  const lowValue = Math.min(...data);
 
   document.getElementById("peak-value").textContent = peakValue.toFixed(2);
   document.getElementById("low-value").textContent = lowValue.toFixed(2);
+  const canvas = document.getElementById("chartCanvas");
+  const ctx = canvas.getContext("2d");
+  const chartHeight = canvas.height - 40;
+  const chartWidth = canvas.width - 60;
+  const dataMax = Math.max(...data);
+  const dataMin = Math.min(...data);
+  const dataRange = dataMax - dataMin;
+  const dataStep = dataRange > 0 ? chartHeight / dataRange : 0;
+  const stepX = chartWidth / (data.length - 1);
 
-  const ctx = document.getElementById("stock-chart").getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (window.myChart) {
-    window.myChart.destroy();
+  ctx.beginPath();
+  ctx.moveTo(0, chartHeight - (data[0] - dataMin) * dataStep);
+  for (let i = 1; i < data.length; i++) {
+    ctx.lineTo(i * stepX, chartHeight - (data[i] - dataMin) * dataStep);
   }
+  ctx.strokeStyle = "#39FF14";
+  ctx.lineWidth = 2;
+  ctx.stroke();
 
-  window.myChart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: `${stockSymbol} Stock Price`,
-          data: dataValues,
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 3,
-          fill: true,
-        },
-      ],
-    },
-    options: {
-      scales: {
-        xAxes: [
-          {
-            display: false,
-            ticks: {
-              display: false,
-            },
-          },
-        ],
-        yAxes: [
-          {
-            display: false,
-            ticks: {
-              display: false,
-            },
-          },
-        ],
-      },
-      tooltips: {
-        enabled: true,
-        mode: "index",
-        intersect: false,
-        callbacks: {
-          title: function (tooltipItems) {
-            const index = tooltipItems[0].index;
-            return `Date: ${labels[index]}`;
-          },
-          label: function (tooltipItem) {
-            const price = tooltipItem.yLabel.toFixed(2);
-            return [`${stockSymbol}: $${price}`];
-          },
-        },
-      },
-      legend: {
-        display: false,
-      },
-    },
+  ctx.beginPath();
+  ctx.setLineDash([2, 2]);
+  const zeroY = chartHeight - (0 - dataMin) * dataStep;
+  ctx.moveTo(0, zeroY);
+  ctx.lineTo(canvas.width, zeroY);
+  ctx.strokeStyle = "#ccc";
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  const tooltip = document.getElementById("tooltip");
+  const xAxisLabel = document.getElementById("xAxisLabel");
+
+  canvas.addEventListener("mousemove", (event) => {
+    const x = event.offsetX;
+    const y = event.offsetY;
+    const dataIndex = Math.min(Math.floor(x / stepX), data.length - 1);
+    const stockValue = data[dataIndex].toFixed(2);
+    const xAxisValue = labels[dataIndex];
+
+    tooltip.style.display = "block";
+    // tooltip.style.left = `${x + 10}px`;
+    // tooltip.style.top = `${y - 40}px`;
+    tooltip.textContent = `${stockName}: $${stockValue}`;
+    tooltip.style.color = "black";
+    tooltip.style.fontSize = "2rem";
+
+    xAxisLabel.style.display = "block";
+    xAxisLabel.style.left = `${x}px`;
+    xAxisLabel.style.top = `${chartHeight + 5}px`;
+    xAxisLabel.textContent = xAxisValue;
+    xAxisLabel.style.color = "black";
+    xAxisLabel.style.fontSize = "2rem";
+
+    ctx.clearRect(0, 0, canvas.width, chartHeight);
+    ctx.clearRect(
+      0,
+      chartHeight + 20,
+      canvas.width,
+      canvas.height - chartHeight - 20
+    );
+
+    ctx.beginPath();
+    ctx.moveTo(0, chartHeight - (data[0] - dataMin) * dataStep);
+    for (let i = 1; i < data.length; i++) {
+      ctx.lineTo(i * stepX, chartHeight - (data[i] - dataMin) * dataStep);
+    }
+    ctx.strokeStyle = "#39FF14";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.setLineDash([2, 2]);
+    ctx.moveTo(0, zeroY);
+    ctx.lineTo(canvas.width, zeroY);
+    ctx.strokeStyle = "#ccc";
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, chartHeight);
+    ctx.strokeStyle = "#ccc";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(
+      x,
+      chartHeight - (data[dataIndex] - dataMin) * dataStep,
+      6,
+      0,
+      2 * Math.PI
+    );
+    ctx.fillStyle = "#39FF14";
+    ctx.fill();
+  });
+
+  canvas.addEventListener("mouseout", () => {
+    tooltip.style.display = "none";
+    xAxisLabel.style.display = "none";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawChart(data, labels, stockName);
   });
 }
