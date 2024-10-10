@@ -13,10 +13,7 @@ async function getStockData(stockSymbol) {
   }
 }
 
-// Function to render the chart based on the stock symbol and range (1m, 3m, etc.)
 export async function renderChart(range, stockSymbol) {
-  console.log(`Rendering chart for: ${stockSymbol} ${range}`);
-
   const stockData = await getStockData(stockSymbol); // Await stock data
 
   if (!stockData || !stockData[range]) {
@@ -59,9 +56,40 @@ export async function renderChart(range, stockSymbol) {
     },
     options: {
       scales: {
-        y: {
-          beginAtZero: true,
+        xAxes: [
+          {
+            display: false,
+            ticks: {
+              display: false,
+            },
+          },
+        ],
+        yAxes: [
+          {
+            display: false,
+            ticks: {
+              display: false,
+            },
+          },
+        ],
+      },
+      tooltips: {
+        enabled: true,
+        mode: "index",
+        intersect: false,
+        callbacks: {
+          title: function (tooltipItems) {
+            const index = tooltipItems[0].index;
+            return `Date: ${labels[index]}`;
+          },
+          label: function (tooltipItem) {
+            const price = tooltipItem.yLabel.toFixed(2);
+            return [`${stockSymbol}: $${price}`];
+          },
         },
+      },
+      legend: {
+        display: false,
       },
     },
   });
